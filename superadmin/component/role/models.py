@@ -15,4 +15,4 @@ class Role(BaseModel):
         ordering = ["name"]
 
     def __str__(self):
-        return self.name()
+        return self.name
