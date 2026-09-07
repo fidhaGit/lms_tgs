@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Users
+from .models import Users,ProfileInfo
 from django.contrib.auth.hashers import make_password, check_password
 
 
@@ -39,3 +39,9 @@ class LoginSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs    
+
+
+class ProfileInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileInfo
+        fields = '__all__'
