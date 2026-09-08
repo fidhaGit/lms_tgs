@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import BranchListCreateView, BranchDetailView
+from rest_framework import routers
+from .views import BranchViewSet
 
-urlpatterns = [
-    path("", BranchListCreateView.as_view(), name="branch-list-create"),
-    path("<int:pk>/", BranchDetailView.as_view(), name="branch-detail"),
-]
+router = routers.SimpleRouter()
+router.register(r'branches', BranchViewSet, basename='branch')
+
+urlpatterns = []
+urlpatterns += router.urls

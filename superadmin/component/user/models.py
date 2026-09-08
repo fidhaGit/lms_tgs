@@ -31,14 +31,3 @@ class Users(BaseModel):
     @property
     def is_anonymous(self):
         return False
-class ProfileInfo(BaseModel):
-    user = models.OneToOneField(
-        Users, on_delete=models.CASCADE, related_name="profile")
-    address = models.TextField(blank=True)
-    profile_picture = models.URLField(max_length=500, blank=True, null=True)
-
-    class Meta:
-        db_table = "profiles_info"
-
-    def __str__(self):
-        return self.user.__str__()

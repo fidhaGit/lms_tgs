@@ -1,26 +1,29 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Users,ProfileInfo
+from .models import Users
 from django.contrib.auth.hashers import make_password, check_password
 
 
-class UserSerializer(serializers.ModelSerializer):
-   
-    class Meta:
-        model=Users
-        fields="__all__"
+from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
+from .models import Users
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        exclude = ('password', 'created_at', 'updated_at')
 
     def create(self, validated_data):
-        validated_data["password"] = make_password(validated_data["password"])
+        raw_password = self.initial_data.get("password")
+        validated_data["password"] = make_password(raw_password)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        if "password" in validated_data:
-            validated_data["password"] = make_password(validated_data["password"])
+        raw_password = self.initial_data.get("password")
+        if raw_password:
+            validated_data["password"] = make_password(raw_password)
         return super().update(instance, validated_data)
-
-
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -40,8 +43,3 @@ class LoginSerializer(serializers.Serializer):
         attrs["user"] = user
         return attrs    
 
-
-class ProfileInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProfileInfo
-        fields = '__all__'

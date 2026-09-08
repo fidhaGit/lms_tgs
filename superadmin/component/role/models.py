@@ -1,18 +1,15 @@
 from django.db import models
 from shared.models import BaseModel
+from simple_history.models import HistoricalRecords
+
 
 class Role(BaseModel):
-    options = {
-    "SUPER_ADMIN": "super_admin",
-    "ADMIN": "admin",
-    "STAFF": "staff",
-    "MEMBER": "member",}
-    name = models.CharField(max_length=20,choices=options,unique=True,)
-    description = models.TextField(blank=True,)
-    is_active = models.BooleanField(default=True,)
+    name = models.CharField(max_length=150, unique=True)
+    is_active = models.BooleanField(default=True)
+    history = HistoricalRecords()
+
     class Meta:
         db_table = "roles"
-        ordering = ["name"]
 
     def __str__(self):
         return self.name
