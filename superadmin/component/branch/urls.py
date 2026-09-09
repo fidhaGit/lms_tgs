@@ -1,9 +1,8 @@
 from django.urls import path
 from rest_framework import routers
-from .views import BranchViewSet
-
+from .views import BranchViewset
 router = routers.SimpleRouter()
-router.register(r'branches', BranchViewSet, basename='branch')
+router.register(r'branches', BranchViewset, basename='branch')
 
 urlpatterns = []
 urlpatterns += router.urls

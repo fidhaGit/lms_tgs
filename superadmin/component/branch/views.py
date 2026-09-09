@@ -2,12 +2,15 @@ from .serializers import BranchSerializer
 from .models import Branch
 from rest_framework import viewsets
 from rest_framework.response import Response
+from superadmin.component.user.authentication import CustomJWTAuthentication
 from rest_framework.decorators import action
 
 
-class BranchViewSet(viewsets.ModelViewSet):
+class BranchViewset(viewsets.ModelViewSet):
     queryset = Branch.objects.filter(is_delete=False).order_by('name')
     serializer_class = BranchSerializer
+    authentication_classes = [CustomJWTAuthentication]
+    permission_classes = []
     http_method_names = ['get', 'post', 'put']
     pagination_class = None
 
@@ -15,7 +18,7 @@ class BranchViewSet(viewsets.ModelViewSet):
         user = request.user
         if user.__class__.__name__ == 'AnonymousUser':
             return Response({'status': 'failure', 'message': ["Unknown user"]}, status=401)
-        elif user.role.name.lower() == 'super_admin':
+        elif user.__class__.__name__ == 'Users' and user.role.name.lower() == 'super_admin':
             return super().create(request, *args, **kwargs)
         else:
             return Response({'status': 'failure', 'message': ["Do not have permission to perform this action"]}, status=400)
@@ -24,7 +27,7 @@ class BranchViewSet(viewsets.ModelViewSet):
         user = request.user
         if user.__class__.__name__ == 'AnonymousUser':
             return Response({'status': 'failure', 'message': ["Unknown user"]}, status=401)
-        elif user.role.name.lower() == 'super_admin':
+        elif user.__class__.__name__ == 'Users' and user.role.name.lower() == 'super_admin':
             return super().update(request, *args, **kwargs)
         else:
             return Response({'status': 'failure', 'message': ["Do not have permission to perform this action"]}, status=400)
@@ -33,25 +36,36 @@ class BranchViewSet(viewsets.ModelViewSet):
         user = request.user
         if user.__class__.__name__ == 'AnonymousUser':
             return Response({'status': 'failure', 'message': ["Unknown user"]}, status=401)
-        return Response(Branch.objects.filter(is_delete=False).values('id', 'name', 'code', 'address', 'phone', 'email', 'is_active'))
+        elif user.__class__.__name__ != 'Users':
+            return Response({'status': 'failure', 'message': ["Do not have permission to perform this action"]}, status=400)
+
+        role = user.role.name.lower()
+        qs = Branch.objects.filter(is_delete=False)
+        if role == 'super_admin':
+            pass
+        elif role in ('admin', 'librarian'):
+            qs = qs.filter(id=user.branch_id)
+        else:
+            return Response({'status': 'failure', 'message': ["Do not have permission to perform this action"]}, status=400)
+        return Response(qs.values('id', 'name', 'code', 'address', 'phone', 'email', 'is_active'))
 
     def destroy(self, request, *args, **kwargs):
         user = request.user
         if user.__class__.__name__ == 'AnonymousUser':
             return Response({'status': 'failure', 'message': ["Unknown user"]}, status=401)
-        if user.role.name.lower() != 'super_admin':
+        if not (user.__class__.__name__ == 'Users' and user.role.name.lower() == 'super_admin'):
             return Response({'status': 'failure', 'message': ["Do not have permission to perform this action"]}, status=400)
         instance = self.get_object()
         instance.is_delete = True
         instance.save()
         return Response({'status': 'success', 'message': ["Branch removed"]}, status=200)
 
-    @action(methods=['POST'], detail=False)
+    @action(methods=['POST'], detail=False, authentication_classes=[CustomJWTAuthentication])
     def check_code(self, request):
         user = request.user
         if user.__class__.__name__ == 'AnonymousUser':
             return Response({'status': 'failure', 'message': ["Unknown user"]}, status=401)
-        elif user.role.name.lower() == 'super_admin':
+        elif user.__class__.__name__ == 'Users' and user.role.name.lower() == 'super_admin':
             code = request.data.get('code')
             if not code:
                 return Response({'status': 'failure', 'message': ["payload not found"]}, status=400)
