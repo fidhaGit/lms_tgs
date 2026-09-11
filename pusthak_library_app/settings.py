@@ -42,11 +42,16 @@ INSTALLED_APPS = [
     'superadmin.component.user',
     'superadmin.component.branch',
     'superadmin.component.role',
+    'superadmin.component.masterbook',
+    'branch.component.book',
+    'branch.component.inventory',
+
     #pcg
     # 'shared',
     'simple_history',
     'rest_framework',
     'django_extensions',
+    
     
 ]
 
@@ -80,19 +85,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'pusthak_library_app.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": config("DB_NAME"),
-#         "USER": config("DB_USER"),
-#         "PASSWORD": config("DB_PASSWORD"),
-#         "HOST": config("DB_HOST"),
-#         "PORT": config("DB_PORT"),
-#     }
-# }
 
 DATABASES = {
 

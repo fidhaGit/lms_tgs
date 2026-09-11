@@ -1,71 +1,6 @@
-# ADMIN_LABELS = {'user','branch'}
-# BRANCH_LABELS = {'book', }
-# CLIENT_LABELS = {"book_log"}
-
-# class DatabaseRouter:
-#     def db_for_read(self, model, **hints):
-#         if model._meta.app_label in BRANCH_LABELS :
-#             return 'branch_db'
-#         elif  model._meta.app_label in  CLIENT_LABELS:
-#             return 'book_log_db'
-#         else:
-#             None
-
-#     def db_for_write(self, model, **hints):
-#         if model._meta.app_label in BRANCH_LABELS:
-#             return 'branch_db' 
-#         elif  model._meta.app_label in  CLIENT_LABELS:
-#             return 'client_log_db' 
-#         else:
-#             None
-
-#     def allow_relations(self, obj1, obj2, **hints):
-#         if obj1._meta.app_label == 'branchs' or obj2._meta.app_label == 'branchs':
-#             return 'branch_db'
-#         return None
-
-#     def allow_migrate(self, db, app_label, model_name=None, **hints):
-   
-        
-#         if app_label in BRANCH_LABELS and db == 'default':
-#             return False
-#         elif app_label in ADMIN_LABELS and db == 'default':
-#             return True
-#         elif app_label in  CLIENT_LABELS and db == 'default':
-#             return False
-
-#         elif app_label in BRANCH_LABELS and db == 'branch_db':
-#             return True
-#         elif app_label in ADMIN_LABELS and db == 'branch_db':
-#             return False
-#         elif app_label in CLIENT_LABELS and db == 'branch_db':
-#             return False
-        
-#         elif app_label in BRANCH_LABELS and db == 'client_log_db':
-#             return False
-#         elif app_label in ADMIN_LABELS and db == 'client_log_db':
-#             return False
-#         elif app_label in CLIENT_LABELS and db == 'client_log_db':
-#             return True
-        
-#         else:
-#             return True
-
-
-ADMIN_LABELS = {
-    "user",
-    "branch",
-    "role",
-}
-
-BRANCH_LABELS = {
-    "book",
-}
-
-CLIENT_LABELS = {
-    "book_log",
-}
-
+ADMIN_LABELS = {"user", "branch", "role",}
+BRANCH_LABELS = {"book","inventory",}
+CLIENT_LABELS = {"book_log",}
 
 class DatabaseRouter:
 
@@ -110,9 +45,8 @@ class DatabaseRouter:
         **hints
     ):
 
-        # ============================================
         # DEFAULT DATABASE
-        # ============================================
+       
 
         if db == "default":
 
@@ -126,9 +60,8 @@ class DatabaseRouter:
                 return False
 
 
-        # ============================================
+        
         # BRANCH DATABASE
-        # ============================================
 
         elif db == "branch_db":
 
@@ -142,9 +75,7 @@ class DatabaseRouter:
                 return False
 
 
-        # ============================================
         # HISTORY DATABASE
-        # ============================================
 
         elif db == "history_db":
 

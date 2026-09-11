@@ -56,6 +56,13 @@ class BranchViewset(viewsets.ModelViewSet):
         if not (user.__class__.__name__ == 'Users' and user.role.name.lower() == 'super_admin'):
             return Response({'status': 'failure', 'message': ["Do not have permission to perform this action"]}, status=400)
         instance = self.get_object()
+
+        if branch_has_dependent_data(instance.id):
+            return Response({
+                'status': 'failure',
+                'message': ["Cannot delete a branch that still has books or members. Remove or reassign them first."]
+            }, status=400)
+
         instance.is_delete = True
         instance.save()
         return Response({'status': 'success', 'message': ["Branch removed"]}, status=200)
@@ -76,3 +83,4 @@ class BranchViewset(viewsets.ModelViewSet):
                 return Response({'status': 'success', 'message': ["code already exist"], 'available': False}, status=200)
         else:
             return Response({'status': 'failure', 'message': ["Do not have permission to perform this action"]}, status=400)
+        

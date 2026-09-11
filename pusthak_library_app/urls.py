@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/user/', include('superadmin.component.user.urls')),
     path('api/branch/', include('superadmin.component.branch.urls')),
     path('api/role/', include('superadmin.component.role.urls')),
+    path('api/masterbook/', include('superadmin.component.masterbook.urls')),
 ]

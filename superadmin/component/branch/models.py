@@ -65,3 +65,29 @@ class Branch(BaseModel):
              send_branch_admin_credentials_email.delay(
                      admin_user.email, admin_user.first_name, self.name, raw_password, reset_link
              )
+
+     def branch_exists(branch_id):
+      if not branch_id:
+        return False
+      return Branch.objects.filter(id=branch_id, is_delete=False).exists()
+  
+
+     def get_active_branch(branch_id):
+       return Branch.objects.filter(id=branch_id, is_delete=False, is_active=True).first()     
+#      def branch_has_dependent_data(branch_id):
+   
+#        try:
+#            from pusthak_library_app.Branch.component.book.models import Book
+#            if Book.objects.filter(branch_id=branch_id).exists():
+#                return True
+#        except ImportError:
+#            pass
+   
+#        try:
+#            from pusthak_library_app.Branch.component.member.models import Member
+#            if Member.objects.filter(branch_id=branch_id).exists():
+#                return True
+#        except ImportError:
+#            pass
+   
+#        return False
