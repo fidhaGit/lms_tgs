@@ -1,5 +1,9 @@
 from django.apps import AppConfig
 
-class BranchConfig(AppConfig):
+
+class InventoryConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "branch.component.inventory"    
+    name = "branch.component.inventory"
+
+    def ready(self):
+        import branch.component.inventory.signals

@@ -4,8 +4,8 @@ from shared.models import BaseModel
 
 
 class Book(BaseModel):
-    master_book = models.ForeignKey('masterbook.MasterBook', on_delete=models.PROTECT, related_name='branch_books')
-    branch = models.ForeignKey('branch.Branch', on_delete=models.PROTECT, related_name='books')
+    master_book = models.ForeignKey('masterbook.MasterBook', on_delete=models.PROTECT,related_name='branch_books', db_constraint=False,)
+    branch = models.ForeignKey('branch.Branch', on_delete=models.PROTECT,related_name='books', db_constraint=False,)
     code = models.CharField(max_length=50, unique=True, blank=True)   # auto-generated
     copy_sequence = models.IntegerField(default=0)                    # internal counter
     total_copies = models.IntegerField(default=0)

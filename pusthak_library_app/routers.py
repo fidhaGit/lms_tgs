@@ -1,4 +1,4 @@
-ADMIN_LABELS = {"user", "branch", "role",}
+ADMIN_LABELS = {"user", "branch", "role", "masterbook",}
 BRANCH_LABELS = {"book","inventory",}
 CLIENT_LABELS = {"book_log",}
 
@@ -34,7 +34,7 @@ class DatabaseRouter:
         if db1 and db2 and db1 == db2:
             return True
 
-        return None
+        return True
 
 
     def allow_migrate(
